@@ -86,11 +86,13 @@ prescriptionForm.addEventListener('submit', (e) => {
             sph: document.getElementById('re-sph').value,
             cyl: document.getElementById('re-cyl').value,
             axis: document.getElementById('re-axis').value,
+            pd: document.getElementById('re-pd').value,
         },
         le: {
             sph: document.getElementById('le-sph').value,
             cyl: document.getElementById('le-cyl').value,
             axis: document.getElementById('le-axis').value,
+            pd: document.getElementById('le-pd').value,
         },
         add: {
             re: document.getElementById('re-add').value,
@@ -106,9 +108,11 @@ prescriptionForm.addEventListener('submit', (e) => {
     document.getElementById('re-sph').value = '0.00';
     document.getElementById('re-cyl').value = '0.00';
     document.getElementById('re-axis').value = '90';
+    document.getElementById('re-pd').value = '20.00';
     document.getElementById('le-sph').value = '0.00';
     document.getElementById('le-cyl').value = '0.00';
     document.getElementById('le-axis').value = '90';
+    document.getElementById('le-pd').value = '20.00';
     
     // Reset to current date and time
     const now = new Date();
@@ -142,10 +146,14 @@ function displayPrescriptions() {
         const timeDisplay = p.time ? formatTime(p.time) : '';
         const dateTimeString = timeDisplay ? `${formattedDate} at ${timeDisplay}` : formattedDate;
 
+        // Handle backward compatibility for PD values
+        const rePd = p.re && p.re.pd ? p.re.pd : 'N/A';
+        const lePd = p.le && p.le.pd ? p.le.pd : 'N/A';
+
         item.innerHTML = `
             <h4>${p.name} (Age: ${p.age}) - <small>${dateTimeString}</small></h4>
-            <p><strong>RE:</strong> SPH: ${formatValue(p.re.sph, 'power')}, CYL: ${formatValue(p.re.cyl, 'power')}, Axis: ${p.re.axis}°</p>
-            <p><strong>LE:</strong> SPH: ${formatValue(p.le.sph, 'power')}, CYL: ${formatValue(p.le.cyl, 'power')}, Axis: ${p.le.axis}°</p>
+            <p><strong>RE:</strong> SPH: ${formatValue(p.re.sph, 'power')}, CYL: ${formatValue(p.re.cyl, 'power')}, Axis: ${p.re.axis}°, PD: ${rePd}mm</p>
+            <p><strong>LE:</strong> SPH: ${formatValue(p.le.sph, 'power')}, CYL: ${formatValue(p.le.cyl, 'power')}, Axis: ${p.le.axis}°, PD: ${lePd}mm</p>
             <p><strong>ADD:</strong> RE: ${p.add.re || 'N/A'}, LE: ${p.add.le || 'N/A'}</p>
             <button onclick="deletePrescription(${index})">Delete</button>
         `;
